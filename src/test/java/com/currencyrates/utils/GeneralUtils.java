@@ -11,8 +11,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
+/**
+ * Utility class providing general-purpose methods.
+ */
 public class GeneralUtils {
-    public static String getFileName(){
+
+    /**
+     * Generates a timestamp-based file name using the current date and time.
+     *
+     * @return A string representing the current date and time formatted as "yyyy-MM-dd_HH-mm-ss".
+     */
+    public static String getFileName() {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
         String formattedNow = now.format(formatter);

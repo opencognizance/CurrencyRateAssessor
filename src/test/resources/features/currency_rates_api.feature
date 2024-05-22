@@ -6,5 +6,5 @@ Feature: Currency Rates API
 
   Scenario: To test whether the Currency Rates API Call is successfull
     Given Customer wants to get rates for "USD"
-    When Customer wants to perform a GET operation
+    When Customer wants to perform a GET operation to get rates
     Then Validate that the API call is successfull

@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = "src/test/resources/features",
-        glue = {"src.test.java.com.currencyrates.stepdefinitions","src.test.java.com.currencyrates.hooks"}
+        glue = {"com.currencyrates.stepdefinitions","com.currencyrates.hooks"}
 )
 public class Runner {
 }
