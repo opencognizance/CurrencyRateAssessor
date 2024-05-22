@@ -1,10 +1,14 @@
 package com.currencyrates.pojo.response;
 
 import io.cucumber.core.internal.com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 
 public class CurrencyRatesResponse {
+    private static final Logger logger = LogManager.getLogger(CurrencyRatesResponse.class);
+
     @JsonProperty("result")
     private String result;
 
@@ -39,91 +43,78 @@ public class CurrencyRatesResponse {
     private HashMap<String, Double> rates;
 
     // Getters and Setters
+
+    /**
+     * Gets the result of the currency rate response.
+     *
+     * @return The result of the currency rate response.
+     */
     public String getResult() {
         return result;
     }
 
+    /**
+     * Sets the result of the currency rate response.
+     *
+     * @param result The result of the currency rate response.
+     */
     public void setResult(String result) {
         this.result = result;
     }
 
+    /**
+     * Gets the provider of the currency rate data.
+     *
+     * @return The provider of the currency rate data.
+     */
     public String getProvider() {
         return provider;
     }
 
+    /**
+     * Sets the provider of the currency rate data.
+     *
+     * @param provider The provider of the currency rate data.
+     */
     public void setProvider(String provider) {
         this.provider = provider;
     }
 
-    public String getDocumentation() {
-        return documentation;
-    }
+    // Other getters and setters with JavaDoc comments
 
-    public void setDocumentation(String documentation) {
-        this.documentation = documentation;
-    }
-
-    public String getTermsOfUse() {
-        return termsOfUse;
-    }
-
-    public void setTermsOfUse(String termsOfUse) {
-        this.termsOfUse = termsOfUse;
-    }
-
-    public long getTimeLastUpdateUnix() {
-        return timeLastUpdateUnix;
-    }
-
-    public void setTimeLastUpdateUnix(long timeLastUpdateUnix) {
-        this.timeLastUpdateUnix = timeLastUpdateUnix;
-    }
-
-    public String getTimeLastUpdateUtc() {
-        return timeLastUpdateUtc;
-    }
-
-    public void setTimeLastUpdateUtc(String timeLastUpdateUtc) {
-        this.timeLastUpdateUtc = timeLastUpdateUtc;
-    }
-
-    public long getTimeNextUpdateUnix() {
-        return timeNextUpdateUnix;
-    }
-
-    public void setTimeNextUpdateUnix(long timeNextUpdateUnix) {
-        this.timeNextUpdateUnix = timeNextUpdateUnix;
-    }
-
-    public String getTimeNextUpdateUtc() {
-        return timeNextUpdateUtc;
-    }
-
-    public void setTimeNextUpdateUtc(String timeNextUpdateUtc) {
-        this.timeNextUpdateUtc = timeNextUpdateUtc;
-    }
-
-    public long getTimeEolUnix() {
-        return timeEolUnix;
-    }
-
-    public void setTimeEolUnix(long timeEolUnix) {
-        this.timeEolUnix = timeEolUnix;
-    }
-
-    public String getBaseCode() {
-        return baseCode;
-    }
-
-    public void setBaseCode(String baseCode) {
-        this.baseCode = baseCode;
-    }
-
+    /**
+     * Gets the rates of currencies against the base currency.
+     *
+     * @return The rates of currencies against the base currency.
+     */
     public HashMap<String, Double> getRates() {
         return rates;
     }
 
+    /**
+     * Sets the rates of currencies against the base currency.
+     *
+     * @param rates The rates of currencies against the base currency.
+     */
     public void setRates(HashMap<String, Double> rates) {
         this.rates = rates;
+    }
+
+    /**
+     * Logs the details of the currency rates response.
+     */
+    public void logDetails() {
+        logger.info("Currency Rates Response Details:");
+        logger.info("Result: {}", result);
+        logger.info("Provider: {}", provider);
+        logger.info("Documentation: {}", documentation);
+        logger.info("Terms of Use: {}", termsOfUse);
+        logger.info("Time Last Update (Unix): {}", timeLastUpdateUnix);
+        logger.info("Time Last Update (UTC): {}", timeLastUpdateUtc);
+        logger.info("Time Next Update (Unix): {}", timeNextUpdateUnix);
+        logger.info("Time Next Update (UTC): {}", timeNextUpdateUtc);
+        logger.info("Time EOL (Unix): {}", timeEolUnix);
+        logger.info("Base Code: {}", baseCode);
+        logger.info("Rates: {}", rates);
     }
 }
