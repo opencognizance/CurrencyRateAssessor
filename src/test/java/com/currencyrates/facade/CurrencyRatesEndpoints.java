@@ -54,7 +54,7 @@ public class CurrencyRatesEndpoints {
      */
     public CurrencyRatesResponse getCurrencyRatesResponseObject(){
         // Extract JSON from the response
-        String json = this.response.getBody().toString();
+        String json = this.response.asString();
         CurrencyRatesResponse currencyRatesResponse = null;
         try {
             // Deserialize JSON into CurrencyRatesResponse object

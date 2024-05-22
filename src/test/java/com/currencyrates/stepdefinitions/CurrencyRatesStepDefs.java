@@ -1,6 +1,8 @@
 package com.currencyrates.stepdefinitions;
 
+import com.aventstack.extentreports.ExtentReports;
 import com.currencyrates.facade.CurrencyRatesEndpoints;
+import com.currencyrates.hooks.ExtentManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -15,6 +17,7 @@ public class CurrencyRatesStepDefs {
     private static final Logger logger = LogManager.getLogger(CurrencyRatesEndpoints.class);
     private String currency;
     private CurrencyRatesEndpoints ratesEndpoints;
+    private ExtentReports extentReports;
 
     /**
      * Initializes a new instance of the CurrencyRatesStepDefs class,
@@ -22,6 +25,7 @@ public class CurrencyRatesStepDefs {
      */
     public CurrencyRatesStepDefs() {
         this.ratesEndpoints = new CurrencyRatesEndpoints();
+        this.extentReports = ExtentManager.getInstance();
     }
 
     /**
@@ -54,18 +58,49 @@ public class CurrencyRatesStepDefs {
     /**
      * Validates that the API call was successful by checking the status code.
      */
-    @Then("Validate that the API call is successful")
-    public void validateThatTheAPICallIsSuccessfull() {
+    @Then("Validate that the API call is successfull and status code is {int}")
+    public void validateThatTheAPICallIsSuccessfullAndStatusCodeIs(int expectedStatusCode) {
         logger.info("Method validateThatTheAPICallIsSuccessfull called");
         try {
             int statusCode = this.ratesEndpoints.getResponse().statusCode();
             logger.info("Received status code: {}", statusCode);
-            Assert.assertEquals("The status code should be 200 for the response", statusCode, 200);
+            Assert.assertEquals("The status code should be {} for the response", expectedStatusCode, statusCode);
             logger.info("API call validation successful. Status code is 200.");
         } catch (AssertionError e) {
-            logger.error("API call validation failed. Expected status code 200 but received {}", this.ratesEndpoints.getResponse().statusCode());
+            logger.error("API call validation failed. Expected status code {} but received {}", expectedStatusCode,this.ratesEndpoints.getResponse().statusCode());
             throw e;
         } catch (Exception e) {
+            logger.error("An unexpected error occurred during API call validation: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    @Then("Validate that the API call is successfull and the status is {string}")
+    public void validateThatTheAPICallIsSuccessfullAndTheStatusIs(String expectedStatus) {
+        logger.info("Method validateThatTheAPICallIsSuccessfullAndTheStatusIs called");
+        try{
+            String actualStatus = this.ratesEndpoints.getCurrencyRatesResponseObject().getResult();
+            logger.info("Received status : {}", actualStatus);
+            Assert.assertEquals("The status should be {} for the response", expectedStatus, actualStatus.toUpperCase());
+            logger.info("API call validation successful. Status is SUCCESS.");
+        } catch (AssertionError e){
+            logger.error("API call validation failed. Expected status {} but received {}", expectedStatus, this.ratesEndpoints.getCurrencyRatesResponseObject().getResult());
+            throw e;
+        } catch (Exception e){
+            logger.error("An unexpected error occurred during API call validation: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+
+    @Then("Validate that the price of {string} is range of {double} to {double}")
+    public void validateThatThePriceOfUSDIsRangeOfTo(String currency, Double low, Double high) {
+        logger.info("Method validateThatTheAPICallIsSuccessfullAndTheStatusIs called");
+        try{
+
+        } catch (AssertionError e){
+
+        } catch(Exception e){
             logger.error("An unexpected error occurred during API call validation: {}", e.getMessage());
             throw e;
         }
