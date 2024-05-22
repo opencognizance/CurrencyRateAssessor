@@ -13,11 +13,13 @@ Features
 Usage:
 
 Running Tests:
->>To run the tests, execute the following command:
+>To run the tests, execute the following command:
 
-```mvn test```
+```bash
+mvn test
+```
 
-Generating Reports
+# Generating Reports
 After running the tests, you can generate detailed reports by executing:
 
 Extent reports will be generated in the 'reports' folder.
