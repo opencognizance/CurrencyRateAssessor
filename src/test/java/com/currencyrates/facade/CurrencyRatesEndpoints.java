@@ -82,22 +82,24 @@ public class CurrencyRatesEndpoints {
      */
     public long getResponseTime(String timeUnit) {
         logger.info("Method getResponseTime called with time unit: {}", timeUnit);
-        long responseTime = 0L;
+        long responseTime = this.response.getTimeIn(TimeUnit.MILLISECONDS);
         try {
             switch (timeUnit) {
                 case "SECONDS":
-                    responseTime = this.response.getTimeIn(TimeUnit.SECONDS);
-                    logger.info("The response time is :: {}", responseTime);
-                    logger.info("The response timestamp is :: {}", this.response.timeIn(TimeUnit.SECONDS));
+                    long seconds = TimeUnit.MILLISECONDS.toSeconds(responseTime);
+                    int remainingMilliseconds = (int) (responseTime % 1000);
+                    logger.info("The response time is :: {} seconds", seconds + "." + remainingMilliseconds);
+                    logger.info("The response timestamp is :: {} seconds", this.response.getTime());
+                    responseTime = seconds;
                     break;
                 case "MILLISECONDS":
-                    responseTime = this.response.getTimeIn(TimeUnit.MILLISECONDS);
-                    logger.info("The response time is :: {}", responseTime);
-                    logger.info("The response timestamp is :: {}", this.response.timeIn(TimeUnit.SECONDS));
+                    logger.info("The response time is :: {} milliseconds", responseTime);
+                    logger.info("The response timestamp is :: {} milliseconds", this.response.getTime());
                     break;
                 case "MICROSECONDS":
                     responseTime = this.response.getTimeIn(TimeUnit.MICROSECONDS);
-                    logger.info("The response time is :: {}", responseTime);
+                    logger.info("The response time is :: {} microseconds", responseTime);
+                    logger.info("The response timestamp is :: {} microseconds", this.response.getTime());
                     break;
                 default:
                     logger.warn("Unsupported time unit: {}. Supported values are SECONDS, MILLISECONDS, MICROSECONDS.", timeUnit);

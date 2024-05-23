@@ -168,10 +168,10 @@ public class CurrencyRatesStepDefs {
             this.test.log(Status.PASS, "Validation passed: response time is more than " + time + " " + unit);
         } catch (IllegalArgumentException e) {
             logger.error("Error: {}", e.getMessage());
-            this.test.log(Status.FAIL, "Validation failed: response time is more than " + time + " " + unit);
+            this.test.log(Status.FAIL, "Validation failed");
             throw e;
         } catch (AssertionError e){
-            this.test.log(Status.FAIL, "Validation failed: response time is more than " + time + " " + unit);
+            this.test.log(Status.FAIL, "Validation failed");
             throw e;
         } catch (Exception e) {
             logger.error("An unexpected error occurred during response time validation: {}", e.getMessage());
