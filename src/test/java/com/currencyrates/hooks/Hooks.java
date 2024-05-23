@@ -22,6 +22,7 @@ public class Hooks {
     @Before
     public void setupTest(Scenario scenario) {
         extentTest = ExtentManager.getInstance().createTest(scenario.getName());
+        ExtentManager.setTest(extentTest);
     }
 
     /**
@@ -32,11 +33,12 @@ public class Hooks {
      */
     @After
     public void tearDown(Scenario scenario) {
+        ExtentTest extentTest = ExtentManager.getTest();
         if (scenario.isFailed()) {
             extentTest.log(Status.FAIL, "Test Case Failed");
         } else {
             extentTest.log(Status.PASS, "Test Case Passed");
         }
-        ExtentManager.getInstance().flush();
+        ExtentManager.flush();
     }
 }

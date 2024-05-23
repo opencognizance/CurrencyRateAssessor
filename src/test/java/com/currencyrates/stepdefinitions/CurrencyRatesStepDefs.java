@@ -1,6 +1,9 @@
 package com.currencyrates.stepdefinitions;
 
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import com.currencyrates.facade.CurrencyRatesEndpoints;
+import com.currencyrates.hooks.ExtentManager;
 import com.currencyrates.maps.PriceMaps;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -22,6 +25,7 @@ public class CurrencyRatesStepDefs {
     private static final Logger logger = LogManager.getLogger(CurrencyRatesEndpoints.class);
     private String currency;
     private CurrencyRatesEndpoints ratesEndpoints;
+    private ExtentTest test;
 
     /**
      * Initializes a new instance of the CurrencyRatesStepDefs class,
@@ -29,6 +33,7 @@ public class CurrencyRatesStepDefs {
      */
     public CurrencyRatesStepDefs() {
         this.ratesEndpoints = new CurrencyRatesEndpoints();
+        this.test = ExtentManager.getTest();
     }
 
     /**
@@ -38,6 +43,7 @@ public class CurrencyRatesStepDefs {
      */
     @Given("Customer wants to get rates for {string}")
     public void customer_wants_to_get_rates(String currency) {
+        this.test.log(Status.INFO, "Customer wants to get rates for "+currency);
         logger.info("Method customer_wants_to_get_rates called with currency: {}", currency);
         this.currency = currency;
         logger.debug("Currency set to: {}", this.currency);
@@ -53,8 +59,10 @@ public class CurrencyRatesStepDefs {
             logger.info("Performing GET operation to get rates for currency: {}", this.currency);
             this.ratesEndpoints.getRateAgainstCurrency(this.currency);
             logger.debug("GET operation performed for currency: {}", this.currency);
+            this.test.log(Status.PASS, "Customer wants to perform a GET operation to get rates");
         } else {
             logger.warn("Currency is not set. GET operation aborted.");
+            this.test.log(Status.FAIL, "Customer wants to perform a GET operation to get rates");
         }
     }
 
@@ -69,11 +77,14 @@ public class CurrencyRatesStepDefs {
             logger.info("Received status code: {}", statusCode);
             Assert.assertEquals("The status code should be {} for the response", expectedStatusCode, statusCode);
             logger.info("API call validation successful. Status code is 200.");
+            this.test.log(Status.PASS, "API call validation successful. Status code is 200.");
         } catch (AssertionError e) {
             logger.error("API call validation failed. Expected status code {} but received {}", expectedStatusCode,this.ratesEndpoints.getResponse().statusCode());
+            this.test.log(Status.FAIL, "API call validation successful. Status code is not 200.");
             throw e;
         } catch (Exception e) {
             logger.error("An unexpected error occurred during API call validation: {}", e.getMessage());
+            this.test.log(Status.FAIL, "API call validation successful. Status code is not 200.");
             throw e;
         }
     }
@@ -86,8 +97,10 @@ public class CurrencyRatesStepDefs {
             logger.info("Received status : {}", actualStatus);
             Assert.assertEquals("The status should be {} for the response", expectedStatus, actualStatus.toUpperCase());
             logger.info("API call validation successful. Status is SUCCESS.");
+            this.test.log(Status.PASS, "API call validation successful. Status is SUCCESS.");
         } catch (AssertionError e){
             logger.error("API call validation failed. Expected status {} but received {}", expectedStatus, this.ratesEndpoints.getCurrencyRatesResponseObject().getResult());
+            this.test.log(Status.FAIL, "API call validation failed. Expected status {} but received {}");
             throw e;
         } catch (Exception e){
             logger.error("An unexpected error occurred during API call validation: {}", e.getMessage());
@@ -105,8 +118,10 @@ public class CurrencyRatesStepDefs {
 
             Assert.assertTrue("The USD price against " + currency + " is within the range", expectedPrice >= low && expectedPrice <= high);
             logger.info("The USD price against {} is within the range of {} to {}", currency, low, high);
+            this.test.log(Status.PASS, "The USD price against "+currency+" is within the range of "+low+" to "+high);
         } catch (AssertionError e) {
             logger.error("The {} price against {} is outside the range of {} to {}", currency, this.currency,low, high);
+            this.test.log(Status.FAIL, "The USD price against "+currency+" is not within the range of "+low+" to "+high);
             throw e;
         } catch (Exception e) {
             logger.error("An unexpected error occurred during API call validation: {}", e.getMessage());
@@ -150,8 +165,13 @@ public class CurrencyRatesStepDefs {
                 default:
                     throw new IllegalArgumentException("Unsupported comparator: " + comparator + ". Supported values are MORE, EQUALS, LESS.");
             }
+            this.test.log(Status.PASS, "Validation passed: response time is more than " + time + " " + unit);
         } catch (IllegalArgumentException e) {
             logger.error("Error: {}", e.getMessage());
+            this.test.log(Status.FAIL, "Validation failed: response time is more than " + time + " " + unit);
+            throw e;
+        } catch (AssertionError e){
+            this.test.log(Status.FAIL, "Validation failed: response time is more than " + time + " " + unit);
             throw e;
         } catch (Exception e) {
             logger.error("An unexpected error occurred during response time validation: {}", e.getMessage());
@@ -172,8 +192,10 @@ public class CurrencyRatesStepDefs {
             logger.info("Actual count of currency pairs: {}", actualCount);
             Assert.assertEquals("The expected and actual count of currency pairs are the same", expectedCount, actualCount);
             logger.info("Validation successful: The expected and actual count of currency pairs match.");
+            this.test.log(Status.PASS, "Validation successful: The expected and actual count of currency pairs match.");
         } catch (AssertionError e) {
             logger.error("Validation failed: Expected count: {}, Actual count: {}", expectedCount, this.ratesEndpoints.getCurrencyRatesResponseObject().getRates().size(), e);
+            this.test.log(Status.FAIL, "Validation unsuccessful: The expected and actual count of currency pairs doesn't match.");
             throw e;
         } catch (Exception e) {
             logger.error("An unexpected error occurred during validation: {}", e.getMessage());
@@ -188,8 +210,10 @@ public class CurrencyRatesStepDefs {
             assertThat(this.ratesEndpoints.getResponse().getBody().asString(),
                     JsonSchemaValidator.matchesJsonSchema(this.ratesEndpoints.getResponseSchema().toString()));
             logger.info("API response matches the JSON schema.");
+            this.test.log(Status.PASS, "API response matches the JSON schema.");
         } catch (AssertionError e){
             logger.error("The API response does not match the JSON schema: {}", e.getMessage());
+            this.test.log(Status.FAIL, "The API response does not match the JSON schema");
             throw e;
         } catch (Exception e) {
             logger.error("An unexpected error occurred while validating the response against the schema: {}", e.getMessage());
@@ -206,8 +230,10 @@ public class CurrencyRatesStepDefs {
                     .getRates().entrySet()) {
                 Assert.assertNotNull("The price received for " + map.getKey() + " is not null", map.getValue());
             }
+            this.test.log(Status.PASS, "All the prices have populated correctly");
         } catch (AssertionError e){
             logger.error("The price received is null");
+            this.test.log(Status.FAIL, "All the prices have not populated correctly");
             throw e;
         } catch (Exception e){
             logger.error("An unexpected error occurred while validating the response against the schema: {}", e.getMessage());

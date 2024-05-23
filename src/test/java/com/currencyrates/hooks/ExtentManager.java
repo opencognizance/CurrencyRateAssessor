@@ -12,21 +12,34 @@ import com.currencyrates.utils.GeneralUtils;
  */
 public class ExtentManager {
     private static ExtentReports extent;
-    private static ExtentTest test;
-    private static ExtentHtmlReporter htmlReporter;
+    private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
 
-    /**
-     * Returns the single instance of ExtentReports. If the instance is null, it initializes
-     * the ExtentReports and attaches an HTML reporter with a timestamped report file name.
-     *
-     * @return the instance of ExtentReports
-     */
-    public static ExtentReports getInstance(){
+    private ExtentManager() { }
+
+    public static ExtentReports getInstance() {
         if (extent == null) {
-            extent = new ExtentReports();
-            htmlReporter = new ExtentHtmlReporter("reports/test_reports_" + GeneralUtils.getFileName() + ".html");
-            extent.attachReporter(htmlReporter);
+            synchronized (ExtentManager.class) {
+                if (extent == null) {
+                    ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter("reports/test_reports_" + GeneralUtils.getFileName() + ".html");
+                    extent = new ExtentReports();
+                    extent.attachReporter(htmlReporter);
+                }
+            }
         }
         return extent;
+    }
+
+    public static ExtentTest getTest() {
+        return test.get();
+    }
+
+    public static void setTest(ExtentTest extentTest) {
+        test.set(extentTest);
+    }
+
+    public static void flush() {
+        if (extent != null) {
+            extent.flush();
+        }
     }
 }
