@@ -204,6 +204,19 @@ public class CurrencyRatesStepDefs {
         }
     }
 
+    /**
+     * Validates whether the API response matches the predefined JSON schema.
+     *
+     * This method retrieves the API response and compares it against the expected JSON schema.
+     * If the response matches the schema, it logs a success message and marks the test as passed.
+     * If the response does not match the schema, it logs an error message, marks the test as failed,
+     * and throws an AssertionError. If any unexpected error occurs during validation, it logs the error
+     * and throws a RuntimeException.
+     *
+     *
+     * @throws AssertionError if the API response does not match the JSON schema
+     * @throws RuntimeException if any unexpected error occurs during the validation
+     */
     @Then("validate whether the API Response matches with the schema")
     public void validateWhetherTheAPIResponseMatchesWithTheSchema(){
         logger.info("Method validateWhetherTheAPIResponseMatchesWithTheSchema() is called");
@@ -222,6 +235,17 @@ public class CurrencyRatesStepDefs {
         }
     }
 
+    /**
+     * Validates that all the prices in the API response have been populated correctly.
+     *
+     * This method iterates through the currency rates in the API response and asserts that each price
+     * is not null. If all prices are populated correctly, it logs a success message and marks the test as passed.
+     * If any price is null, it logs an error message, marks the test as failed, and throws an AssertionError.
+     * If any unexpected error occurs during validation, it logs the error and throws a RuntimeException.
+     *
+     * @throws AssertionError if any price in the API response is null
+     * @throws RuntimeException if any unexpected error occurs during the validation
+     */
 
     @And("Validate that all the prices have populated correctly")
     public void validateThatAllThePricesHavePopulatedCorrectly() {
@@ -241,6 +265,18 @@ public class CurrencyRatesStepDefs {
             throw new RuntimeException("Failed to validate the API response against the JSON schema", e);
         }
     }
+
+    /**
+     * Validates that the timestamps returned in the API response are valid.
+     *
+     * This method checks the `time_last_update_utc` and `time_next_update_utc` fields in the API response
+     * to ensure they contain valid timestamps. If both fields contain valid timestamps, it logs a success message
+     * and marks the test as passed. If any of the fields contain an invalid timestamp, it logs an error message,
+     * marks the test as failed, and throws an AssertionError.
+     *
+     *
+     * @throws AssertionError if any of the timestamp fields contain an invalid timestamp
+     */
 
     @Then("Validate the timestamp returned in the API Response")
     public void validateTheTimestampReturnedInTheAPIResponse() {
