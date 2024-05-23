@@ -15,7 +15,6 @@ Technology Used:
 
 **ExtentReports**: Reporting library for creating detailed and interactive test reports
 
-*** How to run 
 
 
 ## Authors
