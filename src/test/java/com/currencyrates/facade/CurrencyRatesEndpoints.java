@@ -80,23 +80,24 @@ public class CurrencyRatesEndpoints {
      *                 Supported values: "SECONDS", "MILLISECONDS", "MICROSECONDS".
      * @return the response time in the specified time unit. Returns 0 if the time unit is not supported.
      */
-    public long getResponseTime(String timeUnit) {
+    public double getResponseTime(String timeUnit) {
         logger.info("Method getResponseTime called with time unit: {}", timeUnit);
-        long responseTime = this.response.getTimeIn(TimeUnit.MILLISECONDS);
+        double time = this.response.getTimeIn(TimeUnit.MILLISECONDS);
+        double responseTime = 0;
         try {
             switch (timeUnit) {
                 case "SECONDS":
-                    long seconds = TimeUnit.MILLISECONDS.toSeconds(responseTime);
-                    int remainingMilliseconds = (int) (responseTime % 1000);
-                    logger.info("The response time is :: {} seconds", seconds + "." + remainingMilliseconds);
+                    responseTime = time/1000;
+                    logger.info("The response time is :: {} seconds", responseTime);
                     logger.info("The response timestamp is :: {} seconds", this.response.getTime());
-                    responseTime = seconds;
                     break;
                 case "MILLISECONDS":
+                    responseTime = time;
                     logger.info("The response time is :: {} milliseconds", responseTime);
                     logger.info("The response timestamp is :: {} milliseconds", this.response.getTime());
                     break;
                 case "MICROSECONDS":
+                    responseTime = time * 1000;
                     responseTime = this.response.getTimeIn(TimeUnit.MICROSECONDS);
                     logger.info("The response time is :: {} microseconds", responseTime);
                     logger.info("The response timestamp is :: {} microseconds", this.response.getTime());

@@ -25,6 +25,11 @@ Feature: Currency Rates API
     When Customer wants to perform a GET operation to get rates
     Then Validate that the response time is "more" than 3 "SECONDS"
 
+  Scenario: To verify that the API response correctly returns timstamps
+    Given Customer wants to get rates for "USD"
+    When Customer wants to perform a GET operation to get rates
+    Then Validate the timestamp returned in the API Response
+
   Scenario: To verify that the API response time is not less than 3 seconds
     Given Customer wants to get rates for "USD"
     When Customer wants to perform a GET operation to get rates

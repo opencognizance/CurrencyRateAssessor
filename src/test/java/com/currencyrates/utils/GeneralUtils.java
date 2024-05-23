@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.victools.jsonschema.generator.*;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +16,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Properties;
 
 /**
@@ -33,6 +35,8 @@ public class GeneralUtils {
         String formattedNow = now.format(formatter);
         return formattedNow;
     }
+
+
 
     /**
      * Generates a JSON schema from the given JSON response.
@@ -62,6 +66,16 @@ public class GeneralUtils {
         } catch (JsonProcessingException e) {
             // Throw a runtime exception if there's an error during JSON processing
             throw new RuntimeException("Error processing JSON", e);
+        }
+    }
+
+    public static boolean hasTimestampField(String value) {
+        try{
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z");
+            LocalDateTime.parse(value, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
         }
     }
 }

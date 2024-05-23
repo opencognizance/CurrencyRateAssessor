@@ -5,6 +5,7 @@ import com.aventstack.extentreports.Status;
 import com.currencyrates.facade.CurrencyRatesEndpoints;
 import com.currencyrates.hooks.ExtentManager;
 import com.currencyrates.maps.PriceMaps;
+import com.currencyrates.utils.GeneralUtils;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -143,7 +144,7 @@ public class CurrencyRatesStepDefs {
     public void validateThatTheResponseTimeIsThan(String comparator, long time, String unit) {
         logger.info("Method validateThatTheResponseTimeIsThan called with comparator: {}, time: {}, unit: {}", comparator, time, unit);
         try {
-            long responseTime = this.ratesEndpoints.getResponseTime(unit);
+            double responseTime = this.ratesEndpoints.getResponseTime(unit);
             logger.info("Retrieved response time: {} {}", responseTime, unit);
 
             switch (comparator.toUpperCase()) {
@@ -238,6 +239,30 @@ public class CurrencyRatesStepDefs {
         } catch (Exception e){
             logger.error("An unexpected error occurred while validating the response against the schema: {}", e.getMessage());
             throw new RuntimeException("Failed to validate the API response against the JSON schema", e);
+        }
+    }
+
+    @Then("Validate the timestamp returned in the API Response")
+    public void validateTheTimestampReturnedInTheAPIResponse() {
+        logger.info("Method validateTheTimestampReturnedInTheAPIResponse() is called");
+        try{
+            Assert.assertTrue(GeneralUtils.hasTimestampField(this.ratesEndpoints.getCurrencyRatesResponseObject()
+                    .getTimeLastUpdateUtc()));
+            logger.info("time_last_update_utc field returned valid timestamp");
+            this.test.log(Status.PASS, "time_last_update_utc field returned valid timestamp");
+        } catch (AssertionError e){
+            this.test.log(Status.FAIL, "time_last_update_utc field returned invalid timestamp");
+            throw e;
+        }
+
+        try{
+            Assert.assertTrue(GeneralUtils.hasTimestampField(this.ratesEndpoints.getCurrencyRatesResponseObject()
+                    .getTimeNextUpdateUtc()));
+            logger.info("time_next_update_utc field returned valid timestamp");
+            this.test.log(Status.PASS, "time_next_update_utc field returned valid timestamp");
+        }catch (AssertionError e){
+            this.test.log(Status.FAIL, "time_next_update_utc field returned invalid timestamp");
+            throw e;
         }
     }
 }

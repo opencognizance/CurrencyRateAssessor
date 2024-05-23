@@ -100,6 +100,15 @@ public class CurrencyRatesResponse {
         this.rates = rates;
     }
 
+
+    public String getTimeLastUpdateUtc() {
+        return timeLastUpdateUtc;
+    }
+
+    public String getTimeNextUpdateUtc() {
+        return timeNextUpdateUtc;
+    }
+
     /**
      * Logs the details of the currency rates response.
      */
