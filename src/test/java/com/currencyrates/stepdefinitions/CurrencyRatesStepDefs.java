@@ -2,6 +2,7 @@ package com.currencyrates.stepdefinitions;
 
 import com.currencyrates.facade.CurrencyRatesEndpoints;
 import com.currencyrates.maps.PriceMaps;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -9,6 +10,8 @@ import io.restassured.module.jsv.JsonSchemaValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
+
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -195,4 +198,20 @@ public class CurrencyRatesStepDefs {
     }
 
 
+    @And("Validate that all the prices have populated correctly")
+    public void validateThatAllThePricesHavePopulatedCorrectly() {
+        logger.info("Method validateThatAllThePricesHavePopulatedCorrectly() is called");
+        try {
+            for (Map.Entry<String, Double> map : this.ratesEndpoints.getCurrencyRatesResponseObject()
+                    .getRates().entrySet()) {
+                Assert.assertNotNull("The price received for " + map.getKey() + " is not null", map.getValue());
+            }
+        } catch (AssertionError e){
+            logger.error("The price received is null");
+            throw e;
+        } catch (Exception e){
+            logger.error("An unexpected error occurred while validating the response against the schema: {}", e.getMessage());
+            throw new RuntimeException("Failed to validate the API response against the JSON schema", e);
+        }
+    }
 }

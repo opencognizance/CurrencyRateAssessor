@@ -8,6 +8,7 @@ Feature: Currency Rates API
     Given Customer wants to get rates for "USD"
     When Customer wants to perform a GET operation to get rates
     Then Validate that the API call is successfull and status code is 200
+    And Validate that all the prices have populated correctly
 
   Scenario: To verify the status for the Currency Rates API Call
     Given Customer wants to get rates for "USD"

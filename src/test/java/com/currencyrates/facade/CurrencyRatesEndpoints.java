@@ -122,7 +122,7 @@ public class CurrencyRatesEndpoints {
             logger.debug("Response body received: {}", responseBody);
 
             JsonNode schema = GeneralUtils.getJsonSchema(responseBody);
-            logger.info("JSON schema generated successfully");
+            logger.info("JSON schema generated successfully: {}", schema.toPrettyString());
 
             return schema;
         } catch (Exception e) {
