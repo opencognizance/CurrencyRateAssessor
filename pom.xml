@@ -23,7 +23,7 @@
                 <version>${surefire.version}</version>
                 <configuration>
                     <includes>
-                        <include>**/*Test.java</include>
+                        <include>com/currencyrates/runner/Runner.java</include>
                     </includes>
                 </configuration>
             </plugin>

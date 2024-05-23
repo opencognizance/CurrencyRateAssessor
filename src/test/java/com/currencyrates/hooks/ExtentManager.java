@@ -2,6 +2,7 @@ package com.currencyrates.hooks;
 
 
 import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.currencyrates.utils.GeneralUtils;
 
@@ -11,6 +12,7 @@ import com.currencyrates.utils.GeneralUtils;
  */
 public class ExtentManager {
     private static ExtentReports extent;
+    private static ExtentTest test;
     private static ExtentHtmlReporter htmlReporter;
 
     /**

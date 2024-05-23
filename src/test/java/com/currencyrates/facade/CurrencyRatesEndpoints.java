@@ -8,6 +8,8 @@ import io.restassured.specification.RequestSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Facade class to interact with currency rates endpoints.
  */
@@ -67,6 +69,43 @@ public class CurrencyRatesEndpoints {
             logger.error(e.getMessage());
         }
         return currencyRatesResponse;
+    }
+
+    /**
+     * Retrieves the response time of an API call in the specified time unit.
+     *
+     * @param timeUnit the time unit in which the response time should be retrieved.
+     *                 Supported values: "SECONDS", "MILLISECONDS", "MICROSECONDS".
+     * @return the response time in the specified time unit. Returns 0 if the time unit is not supported.
+     */
+    public long getResponseTime(String timeUnit) {
+        logger.info("Method getResponseTime called with time unit: {}", timeUnit);
+        long responseTime = 0L;
+        try {
+            switch (timeUnit) {
+                case "SECONDS":
+                    responseTime = this.response.getTimeIn(TimeUnit.SECONDS);
+                    logger.info("The response time is :: {}", responseTime);
+                    logger.info("The response timestamp is :: {}", this.response.timeIn(TimeUnit.SECONDS));
+                    break;
+                case "MILLISECONDS":
+                    responseTime = this.response.getTimeIn(TimeUnit.MILLISECONDS);
+                    logger.info("The response time is :: {}", responseTime);
+                    logger.info("The response timestamp is :: {}", this.response.timeIn(TimeUnit.SECONDS));
+                    break;
+                case "MICROSECONDS":
+                    responseTime = this.response.getTimeIn(TimeUnit.MICROSECONDS);
+                    logger.info("The response time is :: {}", responseTime);
+                    break;
+                default:
+                    logger.warn("Unsupported time unit: {}. Supported values are SECONDS, MILLISECONDS, MICROSECONDS.", timeUnit);
+                    throw new IllegalArgumentException("Unsupported time unit: " + timeUnit + ". Supported values are SECONDS, MILLISECONDS, MICROSECONDS.");
+            }
+            logger.info("Response time in {}: {}", timeUnit, responseTime);
+        } catch (Exception e) {
+            logger.error("An error occurred while getting the response time: {}", e.getMessage());
+        }
+        return responseTime;
     }
 }
 

@@ -1,8 +1,11 @@
 package com.currencyrates.stepdefinitions;
 
 import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import com.currencyrates.facade.CurrencyRatesEndpoints;
 import com.currencyrates.hooks.ExtentManager;
+import com.currencyrates.maps.PriceMaps;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -17,7 +20,6 @@ public class CurrencyRatesStepDefs {
     private static final Logger logger = LogManager.getLogger(CurrencyRatesEndpoints.class);
     private String currency;
     private CurrencyRatesEndpoints ratesEndpoints;
-    private ExtentReports extentReports;
 
     /**
      * Initializes a new instance of the CurrencyRatesStepDefs class,
@@ -25,7 +27,6 @@ public class CurrencyRatesStepDefs {
      */
     public CurrencyRatesStepDefs() {
         this.ratesEndpoints = new CurrencyRatesEndpoints();
-        this.extentReports = ExtentManager.getInstance();
     }
 
     /**
@@ -95,13 +96,85 @@ public class CurrencyRatesStepDefs {
 
     @Then("Validate that the price of {string} is range of {double} to {double}")
     public void validateThatThePriceOfUSDIsRangeOfTo(String currency, Double low, Double high) {
-        logger.info("Method validateThatTheAPICallIsSuccessfullAndTheStatusIs called");
-        try{
+        logger.info("Method validateThatThePriceOfUSDIsRangeOfTo called");
+        try {
+            Double expectedPrice = PriceMaps.getPriceOfCurrency(this.ratesEndpoints.getCurrencyRatesResponseObject().getRates(), currency);
+            logger.debug("Expected price retrieved: {}", expectedPrice);
 
-        } catch (AssertionError e){
-
-        } catch(Exception e){
+            Assert.assertTrue("The USD price against " + currency + " is within the range", expectedPrice >= low && expectedPrice <= high);
+            logger.info("The USD price against {} is within the range of {} to {}", currency, low, high);
+        } catch (AssertionError e) {
+            logger.error("The {} price against {} is outside the range of {} to {}", currency, this.currency,low, high);
+            throw e;
+        } catch (Exception e) {
             logger.error("An unexpected error occurred during API call validation: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+
+
+    /**
+     * Validates that the response time of the API call is more than, equals to, or less than the specified time.
+     *
+     * @param comparator the comparator to use for validation ("MORE", "EQUALS", "LESS").
+     * @param time       the time to compare the response time against.
+     * @param unit       the unit of time for the comparison (e.g., "SECONDS", "MILLISECONDS", "MICROSECONDS").
+     * @throws IllegalArgumentException if an unsupported comparator is used.
+     */
+    @Then("Validate that the response time is {string} than {long} {string}")
+    public void validateThatTheResponseTimeIsThan(String comparator, long time, String unit) {
+        logger.info("Method validateThatTheResponseTimeIsThan called with comparator: {}, time: {}, unit: {}", comparator, time, unit);
+        try {
+            long responseTime = this.ratesEndpoints.getResponseTime(unit);
+            logger.info("Retrieved response time: {} {}", responseTime, unit);
+
+            switch (comparator.toUpperCase()) {
+                case "MORE":
+                    Assert.assertTrue("The response time should be more than " + time + " " + unit,
+                            responseTime > time);
+                    logger.info("Validation passed: response time is more than {} {}", time, unit);
+                    break;
+                case "EQUALS":
+                    Assert.assertTrue("The response time should be equal to " + time + " " + unit,
+                            responseTime == time);
+                    logger.info("Validation passed: response time is equal to {} {}", time, unit);
+                    break;
+                case "LESS":
+                    Assert.assertTrue("The response time should be less than " + time + " " + unit,
+                            responseTime < time);
+                    logger.info("Validation passed: response time is less than {} {}", time, unit);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported comparator: " + comparator + ". Supported values are MORE, EQUALS, LESS.");
+            }
+        } catch (IllegalArgumentException e) {
+            logger.error("Error: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred during response time validation: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * Validates that the number of currency pairs returned by the API matches the expected count.
+     *
+     * @param expectedCount The expected number of currency pairs.
+     */
+    @Then("validate {int} currency pairs are returned by the API")
+    public void validateCurrencyPairsAreReturnedByTheAPI(int expectedCount) {
+        logger.info("Method validateCurrencyPairsAreReturnedByTheAPI called with expectedCount: {}", expectedCount);
+        try {
+            int actualCount = this.ratesEndpoints.getCurrencyRatesResponseObject().getRates().size();
+            logger.info("Actual count of currency pairs: {}", actualCount);
+            Assert.assertEquals("The expected and actual count of currency pairs are the same", expectedCount, actualCount);
+            logger.info("Validation successful: The expected and actual count of currency pairs match.");
+        } catch (AssertionError e) {
+            logger.error("Validation failed: Expected count: {}, Actual count: {}", expectedCount, this.ratesEndpoints.getCurrencyRatesResponseObject().getRates().size(), e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred during validation: {}", e.getMessage());
             throw e;
         }
     }
