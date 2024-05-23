@@ -1,17 +1,16 @@
 package com.currencyrates.stepdefinitions;
 
-import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.Status;
 import com.currencyrates.facade.CurrencyRatesEndpoints;
-import com.currencyrates.hooks.ExtentManager;
 import com.currencyrates.maps.PriceMaps;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.module.jsv.JsonSchemaValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Step definitions for currency rate retrieval and validation using Cucumber.
@@ -178,4 +177,22 @@ public class CurrencyRatesStepDefs {
             throw e;
         }
     }
+
+    @Then("validate whether the API Response matches with the schema")
+    public void validateWhetherTheAPIResponseMatchesWithTheSchema(){
+        logger.info("Method validateWhetherTheAPIResponseMatchesWithTheSchema() is called");
+        try {
+            assertThat(this.ratesEndpoints.getResponse().getBody().asString(),
+                    JsonSchemaValidator.matchesJsonSchema(this.ratesEndpoints.getResponseSchema().toString()));
+            logger.info("API response matches the JSON schema.");
+        } catch (AssertionError e){
+            logger.error("The API response does not match the JSON schema: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred while validating the response against the schema: {}", e.getMessage());
+            throw new RuntimeException("Failed to validate the API response against the JSON schema", e);
+        }
+    }
+
+
 }

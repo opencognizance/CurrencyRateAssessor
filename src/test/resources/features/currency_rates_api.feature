@@ -29,4 +29,7 @@ Feature: Currency Rates API
     When Customer wants to perform a GET operation to get rates
     Then validate 162 currency pairs are returned by the API
 
-  Scenario:
+  Scenario: To verify that the API response matches the Schema
+    Given Customer wants to get rates for "USD"
+    When Customer wants to perform a GET operation to get rates
+    Then validate whether the API Response matches with the schema

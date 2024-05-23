@@ -1,6 +1,8 @@
 package com.currencyrates.facade;
 
 import com.currencyrates.pojo.response.CurrencyRatesResponse;
+import com.currencyrates.utils.GeneralUtils;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -106,6 +108,27 @@ public class CurrencyRatesEndpoints {
             logger.error("An error occurred while getting the response time: {}", e.getMessage());
         }
         return responseTime;
+    }
+
+    /**
+     * Retrieves the JSON schema of the API response.
+     *
+     * @return The JSON schema as a JsonNode.
+     */
+    public JsonNode getResponseSchema() {
+        logger.info("Method getResponseSchema called");
+        try {
+            String responseBody = this.response.getBody().asString();
+            logger.debug("Response body received: {}", responseBody);
+
+            JsonNode schema = GeneralUtils.getJsonSchema(responseBody);
+            logger.info("JSON schema generated successfully");
+
+            return schema;
+        } catch (Exception e) {
+            logger.error("An error occurred while generating JSON schema: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to generate JSON schema", e);
+        }
     }
 }
 
