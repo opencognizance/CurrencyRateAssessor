@@ -1,36 +1,44 @@
-# MultiCurrencyRateTester
 
-Currency Rate Assessor is a test framework designed to assess currency 
-rates against multiple currencies using the Exchange Rate API. This framework
-facilitates automated testing of currency rates to ensure accuracy and reliability.
+# Rest Assured framework for testing Exchange Rate API
 
-# The repository has the following main folders and files:
+This is a test framework designed to assess currency rates against multiple currencies using the Exchange Rate API.
 
-logs/: This directory likely contains log files generated during the test executions. 
+Technology Used:
 
-reports/: This directory contains the test reports, probably generated after test executions. 
+**Java**: The primary programming language for the project.
 
-src/: This is the main source directory containing the test and main source code. 
+**Maven**: A build automation tool used for managing project dependencies and configurations (pom.xml).
 
-test/: Contains the test code, including step definitions, hooks, and test cases. 
+**Cucumber**: A testing framework that supports Behavior Driven Development (BDD), utilized for writing feature files and step definitions.
 
-README.md: A markdown file that provides an overview of the project, usage instructions,
-and other relevant information. pom.xml: The Maven Project Object Model file which contains information about the project and configuration details used by Maven to build the project.
+**Log4j**: A logging library used for generating log files (log4j.properties).
+
+**ExtentReports**: Reporting library for creating detailed and interactive test reports
+
+*** How to run 
 
 
-Usage:
+## Authors
 
-Running Tests:
->To run the tests, execute the following command:
+- [@Abhishek Das](https://github.com/opencognizance)
+
+
+## Running Tests
+
+To run tests, run the following command
 
 ```bash
-mvn test
+  mvn test
 ```
 
-# Generating Reports
-After running the tests, you can generate detailed reports by executing:
 
-Extent reports will be generated in the 'reports' folder.
+## Usage/Examples
 
-Contributors
- >Abhishek Das
+```javascript
+After running
+  >> mvn test
+
+The logs will be generated in the \logs folder
+The reports will be generated in the \reports folder  
+```
+
