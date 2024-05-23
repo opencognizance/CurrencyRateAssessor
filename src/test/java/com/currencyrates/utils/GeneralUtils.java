@@ -34,17 +34,34 @@ public class GeneralUtils {
         return formattedNow;
     }
 
-    public static JsonNode getJsonSchema(String response){
+    /**
+     * Generates a JSON schema from the given JSON response.
+     *
+     * @param response The JSON response string.
+     * @return The JSON schema as a JsonNode.
+     * @throws RuntimeException if an error occurs during JSON processing or schema generation.
+     */
+    public static JsonNode getJsonSchema(String response) {
         ObjectMapper objectMapper = new ObjectMapper();
+
         try {
+            // Read JSON response into a JsonNode
             JsonNode jsonNode = objectMapper.readTree(response);
+
+            // Create a schema generator configuration
             SchemaGeneratorConfig config = new SchemaGeneratorConfigBuilder(objectMapper, SchemaVersion.DRAFT_2019_09, OptionPreset.PLAIN_JSON)
                     .build();
+
+            // Create a schema generator
             SchemaGenerator generator = new SchemaGenerator(config);
+
+            // Generate the JSON schema from the JsonNode
             JsonNode schema = generator.generateSchema(jsonNode.getClass());
+
             return schema;
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            // Throw a runtime exception if there's an error during JSON processing
+            throw new RuntimeException("Error processing JSON", e);
         }
     }
 }
