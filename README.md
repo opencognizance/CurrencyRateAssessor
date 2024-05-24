@@ -7,6 +7,8 @@ Technology Used:
 
 **Java**: The primary programming language for the project.
 
+**Rest Assured**: Java Library used to test REST web services and validate requests & responses.
+
 **Maven**: A build automation tool used for managing project dependencies and configurations (pom.xml).
 
 **Cucumber**: A testing framework that supports Behavior Driven Development (BDD), utilized for writing feature files and step definitions.
